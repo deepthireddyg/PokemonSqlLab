@@ -1,0 +1,45 @@
+--What are all the types of pokemon that a pokemon can have?
+--Select * from types;
+--What is the name of the pokemon with id 45?
+--SELECT NAME FROM POKEMONS WHERE ID=45;
+--How many pokemon are there?
+--SELECT COUNT(ID) FROM POKEMONS;
+--How many types are there?
+--Select count(ID) From Types;
+* How many pokemon have a secondary type?
+select count(*) from pokemon.pokemons where pokemon.secondary_type IS NOT NULL;
+What is each pokemon's primary type?
+select pokemons.name,types.name from pokemon.pokemons, pokemon.types where pokemon.pokemons.primary_type=pokemon.types.id;
+What is Rufflet's secondary type?
+select secondary_type from pokemon where pokemon.name ="Rufflet";
+What are the names of the pokemon that belong to the trainer with trainerID 303?
+select name from pokemon where pokemon,id IN
+(select pokemon_id from pokemon_trainer where pokemon_trainer.trainerID=303);
+How many pokemon have a secondary type Poison
+select count(*) from pokemon where pokemon.secondary_type IN
+(select pokemon.types where types.name = 'Poison');
+What are all the primary types and how many pokemon have that type?
+select count(*) from pokemon where pokemon.primary_type IS NOT NULL;
+How many pokemon at level 100 does each trainer with at least one level 100 pokemone have?
+(Hint: your query should not display a trainer
+select count(*) from pokemon.pokemon_trainer where pokemon_trainer.pokelevel >= 100
+group by trainerID;
+How many pokemon only belong to one trainer and no other?
+select count(*)  as one_Trainer FROM (
+  SELECT pokemon_id FROM pokemon.pokemon_trainer GROUP BY pokemon_id HAVING count(*) = 1) pokeman_trainer;
+
+  sorting data depending which Pokemon has more Defends is the strongest */
+select  p.name as "Pokemon Name"	 ,
+       t.trainername as "Trainer Name	" ,
+       pt.pokelevel as "Level",
+       pt.defense as "Defends",
+        ty.name as "Primary Type",
+       ty1.name as "Secondary Type"
+
+
+      from ((((pokemon.pokemon_trainer pt
+      INNER JOIN pokemon.pokemons p ON pt.pokemon_id= p.id)
+      INNER  JOIN pokemon.trainers t ON t.trainerID = pt.trainerID)
+      INNER  JOIN  pokemon.types ty on ty.id = p.primary_type)
+      INNER  JOIN  pokemon.types ty1 on ty1.id =p.secondary_type)
+ORDER BY  pt.defense DESC;
